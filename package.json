@@ -1,0 +1,35 @@
+{
+  "name": "rollup-plugin-css-chunks",
+  "version": "1.0.0",
+  "description": "Rollup plugin to produce chunks of the imported CSS files",
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "lint": "eslint index.js",
+    "prepublishOnly": "npm run lint"
+  },
+  "repository": "domingues/rollup-plugin-css-chunks",
+  "keywords": [
+    "rollup-plugin",
+    "css"
+  ],
+  "author": "Fábio Domingues",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/domingues/rollup-plugin-css-chunks/issues"
+  },
+  "homepage": "https://github.com/domingues/rollup-plugin-css-chunks#README",
+  "devDependencies": {
+    "eslint": "^5.16.0"
+  },
+  "dependencies": {
+    "rollup-pluginutils": "^2.6.0"
+  },
+  "peerDependencies": {
+    "rollup": ">=0.60.0"
+  }
+}
