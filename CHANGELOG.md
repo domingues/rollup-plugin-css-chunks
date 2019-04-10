@@ -1,5 +1,9 @@
 # rollup-plugin-css-chunks changelog
 
+## 1.1.1 (10/04/2019)
+
+* Change `bundle[].assetsImports` to `bundle[].assetImports`.
+
 ## 1.1.0 (10/04/2019)
 
 * Chunks file names based on their own content hash;

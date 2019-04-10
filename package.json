@@ -1,7 +1,7 @@
 {
   "name": "rollup-plugin-css-chunks",
-  "version": "1.1.0",
-  "description": "Rollup plugin to produce chunks of the imported CSS files",
+  "version": "1.1.1",
+  "description": "Rollup plugin to extract CSS into chunks",
   "main": "index.js",
   "files": [
     "index.js",
