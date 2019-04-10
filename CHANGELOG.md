@@ -1,6 +1,6 @@
 # rollup-plugin-css-chunks changelog
 
-## 1.1.1 (10/04/2019)
+## 1.1.2 (10/04/2019)
 
 * Change `bundle[].assetsImports` to `bundle[].assetImports`.
 

@@ -70,8 +70,8 @@ module.exports = function svelte(options = {}) {
 			};
 
 			for (const chunk of Object.values(bundle)) {
-				if (chunk.assetsImports===undefined)
-					chunk.assetsImports = [];
+				if (chunk.assetImports===undefined)
+					chunk.assetImports = [];
 
 				let code = '';
 
@@ -136,7 +136,7 @@ module.exports = function svelte(options = {}) {
 				}
 				bundleAsset(css_file_name, code);
 
-				chunk.assetsImports.push(css_file_name);
+				chunk.assetImports.push(css_file_name);
 			}
 		}
 	};
