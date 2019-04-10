@@ -1,6 +1,6 @@
 # rollup-plugin-css-chunks
 
-Output imported CSS files as chunks. The chunks will have the same base filename as the js chunk.
+Output imported CSS files as chunks.
 
 ## Installation
 
@@ -22,7 +22,14 @@ export default {
   },
   plugins: [
     css({
-      sourcemap: true
+      // just consume the CSS files
+      ignore: false,
+      // generate sourcemap
+      sourcemap: false,
+      // name pattern for emitted secondary chunks
+      chunkFileNames: 'chunk-[hash].css'
+      // name pattern for emitted entry chunks
+      entryFileNames: '[name]-[hash].css',
     })
   ]
 }
