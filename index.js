@@ -1,4 +1,3 @@
-const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const { createFilter } = require('rollup-pluginutils');
@@ -21,11 +20,11 @@ module.exports = function svelte(options = {}) {
 		injectImports: false,
 		ignore: false,
 		sourcemap: false,
-      	chunkFileNames: '[name]-[hash].css',
-      	entryFileNames: '[name].css',
+		chunkFileNames: '[name]-[hash].css',
+		entryFileNames: '[name].css',
 	};
 
-	const pluginOptions = Object.assign({}, defaultPluginOptions)
+	const pluginOptions = Object.assign({}, defaultPluginOptions);
 	Object.keys(options).forEach(key => {
 		if (!(key in defaultPluginOptions))
 			throw new Error(`unknown option ${key}`);
@@ -116,9 +115,9 @@ module.exports = function svelte(options = {}) {
 				let css_file_name;
 				if (chunk.facadeModuleId) {
 					const name = path.basename(chunk.facadeModuleId).split('.').slice(0, -1).join('.');
-					css_file_name = makeFileName(name, hash(code), pluginOptions.entryFileNames)
+					css_file_name = makeFileName(name, hash(code), pluginOptions.entryFileNames);
 				} else {
-					css_file_name = makeFileName('chunk', hash(code), pluginOptions.chunkFileNames)
+					css_file_name = makeFileName('chunk', hash(code), pluginOptions.chunkFileNames);
 				}
 
 				let map=null;
