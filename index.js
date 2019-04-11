@@ -70,6 +70,8 @@ module.exports = function svelte(options = {}) {
 			};
 
 			for (const chunk of Object.values(bundle)) {
+				if (chunk.isAsset===true) continue;
+
 				if (chunk.assetImports===undefined)
 					chunk.assetImports = [];
 
