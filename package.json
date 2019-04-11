@@ -1,6 +1,6 @@
 {
   "name": "rollup-plugin-css-chunks",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Rollup plugin to extract CSS into chunks",
   "main": "index.js",
   "files": [
@@ -22,7 +22,7 @@
   "bugs": {
     "url": "https://github.com/domingues/rollup-plugin-css-chunks/issues"
   },
-  "homepage": "https://github.com/domingues/rollup-plugin-css-chunks#README",
+  "homepage": "https://github.com/domingues/rollup-plugin-css-chunks",
   "devDependencies": {
     "eslint": "^5.16.0"
   },

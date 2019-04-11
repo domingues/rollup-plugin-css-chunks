@@ -1,6 +1,7 @@
 # rollup-plugin-css-chunks
 
-Output imported CSS files as chunks.
+[Rollup](https://github.com/rollup/rollup) plugin to extract imported CSS files as chunks, allowing code split of CSS stylesheets.
+Use [rollup-plugin-extract-bundle-tree](https://github.com/domingues/rollup-plugin-extract-bundle-tree) to extract dependencies between JS and CSS chunks.
 
 ## Installation
 
@@ -26,6 +27,8 @@ export default {
       ignore: false,
       // generate sourcemap
       sourcemap: false,
+      // inject `@import` directives
+      injectImports: false,
       // name pattern for emitted secondary chunks
       chunkFileNames: 'chunk-[hash].css'
       // name pattern for emitted entry chunks
