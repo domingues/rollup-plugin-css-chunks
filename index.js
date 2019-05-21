@@ -49,7 +49,8 @@ module.exports = function svelte(options = {}) {
 				if (pluginOptions.sourcemap) {
 					try {
 						data.map[id] = JSON.parse(Buffer.from(m[1], 'base64').toString('ascii').trim());
-					} finally {} // eslint-disable-line
+					} finally { // eslint-disable-line
+					}
 				}
 			} else {
 				data.css[id] = code;
@@ -72,9 +73,6 @@ module.exports = function svelte(options = {}) {
 			for (const chunk of Object.values(bundle)) {
 				if (chunk.isAsset===true) continue;
 
-				if (chunk.assetImports===undefined)
-					chunk.assetImports = [];
-
 				let code = '';
 
 				if (pluginOptions.injectImports) {
@@ -95,12 +93,12 @@ module.exports = function svelte(options = {}) {
 						sources.push(path.relative(options.dir, data.map[f].sources[0]));
 						sourcesContent.push(...data.map[f].sourcesContent);
 						const decoded = decode(data.map[f].mappings);
-						if (i === 0) {
+						if (i===0) {
 							decoded[0].forEach(segment => {
 								segment[0] += code.length;
 							});
 						}
-						if (i > 0) {
+						if (i>0) {
 							decoded.forEach(line => {
 								line.forEach(segment => {
 									segment[1] = i;
@@ -111,7 +109,7 @@ module.exports = function svelte(options = {}) {
 					}
 					code += data.css[f] + '\n';
 				}
-				
+
 				if (code==='') continue;
 
 				let css_file_name;
@@ -122,9 +120,9 @@ module.exports = function svelte(options = {}) {
 					css_file_name = makeFileName('chunk', hash(code), pluginOptions.chunkFileNames);
 				}
 
-				let map=null;
+				let map = null;
 				if (mappings.length>0) {
-					const map_file_name = css_file_name+'.map';
+					const map_file_name = css_file_name + '.map';
 					map = {
 						version: 3,
 						file: css_file_name,
@@ -138,7 +136,7 @@ module.exports = function svelte(options = {}) {
 				}
 				bundleAsset(css_file_name, code);
 
-				chunk.assetImports.push(css_file_name);
+				chunk.imports.push(css_file_name);
 			}
 		}
 	};

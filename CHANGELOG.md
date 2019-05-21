@@ -1,5 +1,9 @@
 # rollup-plugin-css-chunks changelog
 
+## 1.2.0 (21/05/2019)
+
+* Move imports from `bundle[].assetImports` to `bundle[].imports`.
+
 ## 1.1.3 (11/04/2019)
 
 * Fixed bug when find assets chunks;
