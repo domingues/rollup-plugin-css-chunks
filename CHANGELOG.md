@@ -1,5 +1,9 @@
 # rollup-plugin-css-chunks changelog
 
+## 1.2.1 (04/07/2019)
+
+* Don't break source maps when imported CSS files don't have them.
+
 ## 1.2.0 (21/05/2019)
 
 * Move imports from `bundle[].assetImports` to `bundle[].imports`.
