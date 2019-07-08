@@ -106,7 +106,7 @@ module.exports = function svelte(options = {}) {
 							});
 						}
 						mappings.push(...decoded);
-					} else {
+					} else if (pluginOptions.sourcemap) {
 						sources.push('');
 						sourcesContent.push('');
 						mappings.push(...(new Array(data.css[f].split(/\r\n|\r|\n/).length).fill([])));

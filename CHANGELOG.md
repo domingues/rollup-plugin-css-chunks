@@ -1,5 +1,9 @@
 # rollup-plugin-css-chunks changelog
 
+## 1.2.2 (08/07/2019)
+
+* Fix bug that generates source maps even when disabled.
+
 ## 1.2.1 (04/07/2019)
 
 * Don't break source maps when imported CSS files don't have them.
