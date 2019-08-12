@@ -48,7 +48,7 @@ module.exports = function svelte(options = {}) {
 				data.css[id] = code.replace(m[0], '').trim();
 				if (pluginOptions.sourcemap) {
 					try {
-						data.map[id] = JSON.parse(Buffer.from(m[1], 'base64').toString('ascii').trim());
+						data.map[id] = JSON.parse(Buffer.from(m[1], 'base64').toString('utf-8').trim());
 					} finally { // eslint-disable-line
 					}
 				}

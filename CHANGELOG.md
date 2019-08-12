@@ -1,5 +1,9 @@
 # rollup-plugin-css-chunks changelog
 
+## 1.2.3 (12/08/2019)
+
+* Fix bug when parsing sourcemaps with non ASCII characters.
+
 ## 1.2.2 (08/07/2019)
 
 * Fix bug that generates source maps even when disabled.
