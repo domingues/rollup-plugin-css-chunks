@@ -62,16 +62,8 @@ module.exports = function svelte(options = {}) {
 		generateBundle(options, bundle) {
 			if (pluginOptions.ignore!==false) return;
 
-			const bundleAsset = (dest, data) => {
-				bundle[dest] = {
-					fileName: dest,
-					isAsset: true,
-					source: data
-				};
-			};
-
 			for (const chunk of Object.values(bundle)) {
-				if (chunk.isAsset===true) continue;
+				if (chunk.type==='asset') continue;
 
 				let code = '';
 
@@ -136,9 +128,17 @@ module.exports = function svelte(options = {}) {
 						mappings: encode(mappings)
 					};
 					code += `/*# sourceMappingURL=${encodeURIComponent(map_file_name)} */`;
-					bundleAsset(map_file_name, JSON.stringify(map, null));
+					this.emitFile({
+						type: 'asset',
+						fileName: map_file_name,
+						source: JSON.stringify(map, null)
+					});
 				}
-				bundleAsset(css_file_name, code);
+				this.emitFile({
+					type: 'asset',
+					fileName: css_file_name,
+					source: code
+				});
 
 				chunk.imports.push(css_file_name);
 			}

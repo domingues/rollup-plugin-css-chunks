@@ -1,5 +1,10 @@
 # rollup-plugin-css-chunks changelog
 
+## 1.2.4 (07/09/2020)
+
+* Add support to Rollup 2 ([#2](https://github.com/domingues/rollup-plugin-css-chunks/pull/2));
+* Fix Rollup 2 deprecation warning [[#3](https://github.com/domingues/rollup-plugin-css-chunks/issues/3)];
+
 ## 1.2.3 (12/08/2019)
 
 * Fix bug when parsing sourcemaps with non ASCII characters.
