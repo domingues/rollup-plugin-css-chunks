@@ -56,7 +56,7 @@ module.exports = function svelte(options = {}) {
 				data.css[id] = code;
 			}
 
-			return '';
+			return {code: '', moduleSideEffects: 'no-treeshake'};
 		},
 
 		generateBundle(options, bundle) {
