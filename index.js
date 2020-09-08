@@ -62,7 +62,7 @@ module.exports = function svelte(options = {}) {
 		generateBundle(options, bundle) {
 			if (pluginOptions.ignore!==false) return;
 
-			for (const chunk of Object.values(bundle)) {
+			for (const chunk of Object.values(bundle).reverse()) {
 				if (chunk.type==='asset') continue;
 
 				let code = '';
