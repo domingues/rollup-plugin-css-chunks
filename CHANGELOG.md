@@ -1,5 +1,9 @@
 # rollup-plugin-css-chunks changelog
 
+## 1.2.6 (09/09/2020)
+
+* Use the chunk name rather than `chunk`.
+
 ## 1.2.5 (08/09/2020)
 
 * Fix `@import` injection.

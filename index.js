@@ -1,7 +1,7 @@
 const path = require('path');
 const crypto = require('crypto');
-const { createFilter } = require('rollup-pluginutils');
-const { encode, decode } = require('sourcemap-codec');
+const {createFilter} = require('rollup-pluginutils');
+const {encode, decode} = require('sourcemap-codec');
 
 function hash(content) {
 	return crypto.createHmac('sha256', content)
@@ -109,12 +109,7 @@ module.exports = function svelte(options = {}) {
 				if (code==='') continue;
 
 				let css_file_name;
-				if (chunk.facadeModuleId) {
-					const name = path.basename(chunk.facadeModuleId).split('.').slice(0, -1).join('.');
-					css_file_name = makeFileName(name, hash(code), pluginOptions.entryFileNames);
-				} else {
-					css_file_name = makeFileName('chunk', hash(code), pluginOptions.chunkFileNames);
-				}
+				css_file_name = makeFileName(chunk.name, hash(code), pluginOptions.chunkFileNames);
 
 				let map = null;
 				if (mappings.length>0) {
