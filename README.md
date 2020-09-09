@@ -30,7 +30,7 @@ export default {
       // inject `@import` directives
       injectImports: false,
       // name pattern for emitted secondary chunks
-      chunkFileNames: 'chunk-[hash].css',
+      chunkFileNames: '[name]-[hash].css',
       // name pattern for emitted entry chunks
       entryFileNames: '[name]-[hash].css'
     })
