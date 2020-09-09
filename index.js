@@ -108,8 +108,7 @@ module.exports = function svelte(options = {}) {
 
 				if (code==='') continue;
 
-				let css_file_name;
-				css_file_name = makeFileName(chunk.name, hash(code), pluginOptions.chunkFileNames);
+				let css_file_name = makeFileName(chunk.name, hash(code), pluginOptions.chunkFileNames);
 
 				let map = null;
 				if (mappings.length>0) {
