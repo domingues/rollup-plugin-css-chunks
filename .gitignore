@@ -1,4 +1,12 @@
-.DS_Store
-.idea
+# npm
 node_modules
 package-lock.json
+
+# output
+index.js
+
+# MacOS
+.DS_Store
+
+# IntelliJ
+.idea
