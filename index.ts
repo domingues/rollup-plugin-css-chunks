@@ -1,22 +1,51 @@
-const path = require('path');
-const crypto = require('crypto');
-const {createFilter} = require('rollup-pluginutils');
-const {encode, decode} = require('sourcemap-codec');
+import path from 'path';
+import crypto from 'crypto';
+import {
+	NormalizedOutputOptions,
+	OutputBundle,
+	OutputChunk,
+	PluginContext,
+	PluginImpl
+} from 'rollup';
+import {createFilter} from 'rollup-pluginutils';
+import {encode, decode } from 'sourcemap-codec';
 
-function hash(content) {
+function hash(content: string) {
 	return crypto.createHmac('sha256', content)
 		.digest('hex')
 		.substr(0, 8);
 }
 
-function makeFileName(name, hash, pattern) {
-	return pattern.replace('[name]', name).replace('[hash]', hash);
+function makeFileName(name: string, hashed: string, pattern: string) {
+	return pattern.replace('[name]', name).replace('[hash]', hashed);
 }
 
-module.exports = function svelte(options = {}) {
+interface SourceMap {
+	mappings: string,
+	sources: string[],
+	sourcesContent: string
+}
+
+interface PluginOptions {
+    injectImports: boolean;
+    ignore: boolean;
+    sourcemap: boolean;
+    chunkFileNames: string;
+    entryFileNames: string;
+}
+
+interface InputPluginOptions {
+    injectImports?: boolean;
+    ignore?: boolean;
+    sourcemap?: boolean;
+    chunkFileNames?: string;
+    entryFileNames?: string;
+}
+
+const cssChunks: PluginImpl<InputPluginOptions> = function(options = {}) {
 	const filter = createFilter(/\.css$/i, []);
 
-	const defaultPluginOptions = {
+	const defaultPluginOptions: PluginOptions = {
 		injectImports: false,
 		ignore: false,
 		sourcemap: false,
@@ -24,14 +53,16 @@ module.exports = function svelte(options = {}) {
 		entryFileNames: '[name].css',
 	};
 
-	const pluginOptions = Object.assign({}, defaultPluginOptions);
 	Object.keys(options).forEach(key => {
 		if (!(key in defaultPluginOptions))
 			throw new Error(`unknown option ${key}`);
-		pluginOptions[key] = options[key];
 	});
+	const pluginOptions: PluginOptions = Object.assign({}, defaultPluginOptions, options);
 
-	const data = {
+	const data: {
+		css: Record<string, string>,
+		map: Record<string, SourceMap>
+	} = {
 		css: {},
 		map: {}
 	};
@@ -39,7 +70,7 @@ module.exports = function svelte(options = {}) {
 	return {
 		name: 'css',
 
-		transform(code, id) {
+		transform(code: string, id: string) {
 			if (!filter(id)) return null;
 			if (pluginOptions.ignore!==false) return '';
 
@@ -59,18 +90,23 @@ module.exports = function svelte(options = {}) {
 			return {code: '', moduleSideEffects: 'no-treeshake'};
 		},
 
-		generateBundle(options, bundle) {
-			if (pluginOptions.ignore!==false) return;
+		generateBundle(this: PluginContext, generateBundleOpts: NormalizedOutputOptions, bundle: OutputBundle) {
+			if (pluginOptions.ignore !== false) return;
+
+			if (!generateBundleOpts.dir) {
+				this.warn('No directory provided. Skipping CSS generation');
+				return;
+			}
 
 			for (const chunk of Object.values(bundle).reverse()) {
-				if (chunk.type==='asset') continue;
+				if (chunk.type === 'asset') continue;
 
 				let code = '';
 
 				if (pluginOptions.injectImports) {
 					for (const c of chunk.imports) {
 						if (bundle[c]) {
-							code += bundle[c].imports.filter(filter)
+							code += (<OutputChunk>bundle[c]).imports.filter(filter)
 								.map(f => `@import '${f}';`).join('');
 						}
 					}
@@ -82,15 +118,15 @@ module.exports = function svelte(options = {}) {
 				for (const f of Object.keys(chunk.modules).filter(filter)) {
 					if (data.map[f]) {
 						const i = sources.length;
-						sources.push(path.relative(options.dir, data.map[f].sources[0]));
+						sources.push(path.relative(generateBundleOpts.dir, data.map[f].sources[0]));
 						sourcesContent.push(...data.map[f].sourcesContent);
 						const decoded = decode(data.map[f].mappings);
-						if (i===0) {
+						if (i === 0) {
 							decoded[0].forEach(segment => {
 								segment[0] += code.length;
 							});
 						}
-						if (i>0) {
+						if (i > 0) {
 							decoded.forEach(line => {
 								line.forEach(segment => {
 									segment[1] = i;
@@ -106,9 +142,9 @@ module.exports = function svelte(options = {}) {
 					code += data.css[f] + '\n';
 				}
 
-				if (code==='') continue;
+				if (code === '') continue;
 
-				let css_file_name = makeFileName(chunk.name, hash(code), pluginOptions.chunkFileNames);
+				const css_file_name = makeFileName(chunk.name, hash(code), pluginOptions.chunkFileNames);
 
 				let map = null;
 				if (mappings.length>0) {
@@ -139,3 +175,5 @@ module.exports = function svelte(options = {}) {
 		}
 	};
 };
+
+export default cssChunks;
