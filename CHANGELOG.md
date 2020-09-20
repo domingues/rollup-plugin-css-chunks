@@ -1,5 +1,10 @@
 # rollup-plugin-css-chunks changelog
 
+## 1.2.7 (20/09/2020)
+
+* Fix `entryFileNames`;
+* Use TypeScript.
+
 ## 1.2.6 (09/09/2020)
 
 * Use the chunk name rather than `chunk`.
