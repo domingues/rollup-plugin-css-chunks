@@ -1,5 +1,9 @@
 # rollup-plugin-css-chunks changelog
 
+## 1.2.8 (21/09/2020)
+
+* Fix build.
+
 ## 1.2.7 (20/09/2020)
 
 * Fix `entryFileNames`;
