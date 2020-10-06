@@ -29,6 +29,8 @@ export default {
       sourcemap: false,
       // inject `@import` directives
       injectImports: false,
+      // 'link' will rewrite the JavaScript bundle to inject link tags that load the CSS
+      injectType: null,
       // name pattern for emitted secondary chunks
       chunkFileNames: '[name]-[hash].css',
       // name pattern for emitted entry chunks
