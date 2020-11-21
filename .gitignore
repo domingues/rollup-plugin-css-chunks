@@ -4,6 +4,7 @@ package-lock.json
 
 # output
 index.js
+index.d.ts
 
 # MacOS
 .DS_Store
