@@ -1,5 +1,9 @@
 # rollup-plugin-css-chunks changelog
 
+## 1.2.9 (30/11/2020)
+
+* build: add type definitions.
+
 ## 1.2.8 (21/09/2020)
 
 * Fix build.
