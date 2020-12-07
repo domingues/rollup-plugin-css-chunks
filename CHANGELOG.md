@@ -1,5 +1,9 @@
 # rollup-plugin-css-chunks changelog
 
+## 2.0.1 (07/12/2020)
+
+* fix: url-join missing from dependencies (#13);
+
 ## 2.0.0 (07/12/2020)
 
 * feat: load source map file of `sourceMappingURL`;
