@@ -23,46 +23,35 @@ function makeFileName(name: string, hashed: string, pattern: string) {
     return pattern.replace('[name]', name).replace('[hash]', hashed);
 }
 
-interface PluginOptions {
-    injectImports: boolean;
-    ignore: boolean;
-    sourcemap: boolean;
-    chunkFileNames: string;
-    entryFileNames: string;
-}
-
 interface InputPluginOptions {
-    injectImports?: boolean;
     ignore?: boolean;
     sourcemap?: boolean;
+    injectImports?: boolean;
     chunkFileNames?: string;
     entryFileNames?: string;
 }
 
+const defaultPluginOptions = {
+    ignore: false,
+    sourcemap: false,
+    injectImports: false,
+    chunkFileNames: '[name]-[hash].css',
+    entryFileNames: '[name].css',
+};
+
 const cssChunks: PluginImpl<InputPluginOptions> = function (options = {}) {
     const filter = createFilter(/\.css$/i, []);
-
-    const defaultPluginOptions: PluginOptions = {
-        injectImports: false,
-        ignore: false,
-        sourcemap: false,
-        chunkFileNames: '[name]-[hash].css',
-        entryFileNames: '[name].css',
-    };
 
     Object.keys(options).forEach(key => {
         if (!(key in defaultPluginOptions))
             throw new Error(`unknown option ${key}`);
     });
-    const pluginOptions: PluginOptions = Object.assign({}, defaultPluginOptions, options);
+    const pluginOptions = Object.assign({}, defaultPluginOptions, options);
 
-    const data: {
-        css: Record<string, string>,
-        map: Record<string, SourceMap>
-    } = {
-        css: {},
-        map: {}
-    };
+    const css_data: Record<string, {
+        code: string,
+        map: SourceMap
+    }> = {};
 
     return {
         name: 'css',
@@ -97,10 +86,7 @@ const cssChunks: PluginImpl<InputPluginOptions> = function (options = {}) {
 
         transform(code: string, id: string) {
             if (!filter(id)) return null;
-
-            data.css[id] = code;
-            data.map[id] = this.getCombinedSourcemap();
-
+            css_data[id] = {code, map: this.getCombinedSourcemap()};
             return {code: '', meta: {transformedByCSSChunks: true}};
         },
 
@@ -141,10 +127,10 @@ const cssChunks: PluginImpl<InputPluginOptions> = function (options = {}) {
                 for (const f of css_modules) {
                     if (pluginOptions.sourcemap) {
                         const i = sources.length;
-                        sources.push(...data.map[f].sources.map(
+                        sources.push(...css_data[f].map.sources.map(
                             source => path.relative(generateBundleOpts.dir ? generateBundleOpts.dir : '', source)));
-                        sourcesContent.push(...data.map[f].sourcesContent);
-                        const decoded = decode(data.map[f].mappings);
+                        sourcesContent.push(...css_data[f].map.sourcesContent);
+                        const decoded = decode(css_data[f].map.mappings);
                         if (i === 0) {
                             decoded[0].forEach(segment => {
                                 segment[0] += code.length;
@@ -159,7 +145,7 @@ const cssChunks: PluginImpl<InputPluginOptions> = function (options = {}) {
                         }
                         mappings.push(...decoded);
                     }
-                    code += data.css[f] + '\n';
+                    code += css_data[f].code + '\n';
                 }
 
                 if (code === '') continue;
