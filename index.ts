@@ -5,10 +5,13 @@ import {
     OutputBundle,
     OutputChunk,
     PluginContext,
-    PluginImpl
+    PluginImpl,
+    SourceMap,
+    SourceMapInput
 } from 'rollup';
 import {createFilter} from 'rollup-pluginutils';
 import {encode, decode} from 'sourcemap-codec';
+import {readFileSync} from "fs";
 
 function hash(content: string) {
     return crypto.createHmac('sha256', content)
@@ -18,12 +21,6 @@ function hash(content: string) {
 
 function makeFileName(name: string, hashed: string, pattern: string) {
     return pattern.replace('[name]', name).replace('[hash]', hashed);
-}
-
-interface SourceMap {
-    mappings: string,
-    sources: string[],
-    sourcesContent: string
 }
 
 interface PluginOptions {
@@ -70,22 +67,39 @@ const cssChunks: PluginImpl<InputPluginOptions> = function (options = {}) {
     return {
         name: 'css',
 
+        load(id: string) {
+            if (!filter(id)) return null;
+
+            let code = readFileSync(id, 'utf8')
+            let map: SourceMapInput = null
+
+            let m = code.match(/\/\*#\W*sourceMappingURL=data:application\/json;charset=utf-8;base64,([a-zA-Z0-9+/]+)\W*\*\//);
+            if (m !== null) {
+                code = code.replace(m[0], '').trim();
+                try {
+                    map = JSON.parse(Buffer.from(m[1], 'base64').toString('utf-8').trim());
+                } catch (err) {
+                    console.warn(`Could not load css map file of ${id}.\n  ${err}`);
+                }
+            }
+            m = code.match(/\/\*#\W*sourceMappingURL=([^\\/]+)\W*\*\//);
+            if (m !== null) {
+                code = code.replace(m[0], '').trim();
+                try {
+                    map = readFileSync(path.resolve(id, '..', m[1].trim()), 'utf8');
+                } catch (err) {
+                    console.warn(`Could not load css map file of ${id}.\n  ${err}`);
+                }
+            }
+
+            return {code, map}
+        },
+
         transform(code: string, id: string) {
             if (!filter(id)) return null;
-            if (pluginOptions.ignore !== false) return '';
 
-            const m = code.match(/\/\*#\W*sourceMappingURL=data:application\/json;charset=utf-8;base64,([a-zA-Z0-9+/]+)\W*\*\//);
-            if (m !== null) {
-                data.css[id] = code.replace(m[0], '').trim();
-                if (pluginOptions.sourcemap) {
-                    try {
-                        data.map[id] = JSON.parse(Buffer.from(m[1], 'base64').toString('utf-8').trim());
-                    } finally { // eslint-disable-line
-                    }
-                }
-            } else {
-                data.css[id] = code;
-            }
+            data.css[id] = code;
+            data.map[id] = this.getCombinedSourcemap();
 
             return {code: '', meta: {transformedByCSSChunks: true}};
         },
@@ -110,23 +124,25 @@ const cssChunks: PluginImpl<InputPluginOptions> = function (options = {}) {
                                 .map(f => `@import '${f}';`).join('');
                         }
                     }
+                    if (code != '')
+                        code += '\n';
                 }
 
-                const css_modules = []
+                const css_modules: string[] = []
                 for (const f of Object.keys(chunk.modules)) {
-                    const ids = this.getModuleInfo(f)?.importedIds?.filter(
-                        v => this.getModuleInfo(v)?.meta.transformedByCSSChunks == true)
-                    if (ids)
-                        css_modules.push(...ids)
+                    this.getModuleInfo(f)?.importedIds
+                        ?.filter(v => this.getModuleInfo(v)?.meta.transformedByCSSChunks == true)
+                        .forEach(v => css_modules.push(v))
                 }
 
                 const sources = [];
                 const sourcesContent = [];
                 const mappings = [];
                 for (const f of css_modules) {
-                    if (data.map[f]) {
+                    if (pluginOptions.sourcemap) {
                         const i = sources.length;
-                        sources.push(path.relative(generateBundleOpts.dir, data.map[f].sources[0]));
+                        sources.push(...data.map[f].sources.map(
+                            source => path.relative(generateBundleOpts.dir ? generateBundleOpts.dir : '', source)));
                         sourcesContent.push(...data.map[f].sourcesContent);
                         const decoded = decode(data.map[f].mappings);
                         if (i === 0) {
@@ -142,10 +158,6 @@ const cssChunks: PluginImpl<InputPluginOptions> = function (options = {}) {
                             });
                         }
                         mappings.push(...decoded);
-                    } else if (pluginOptions.sourcemap) {
-                        sources.push('');
-                        sourcesContent.push('');
-                        mappings.push(...(new Array(data.css[f].split(/\r\n|\r|\n/).length).fill([])));
                     }
                     code += data.css[f] + '\n';
                 }
@@ -156,7 +168,7 @@ const cssChunks: PluginImpl<InputPluginOptions> = function (options = {}) {
                     chunk.isEntry ? pluginOptions.entryFileNames : pluginOptions.chunkFileNames);
 
                 let map = null;
-                if (mappings.length > 0) {
+                if (pluginOptions.sourcemap) {
                     const map_file_name = css_file_name + '.map';
                     map = {
                         version: 3,

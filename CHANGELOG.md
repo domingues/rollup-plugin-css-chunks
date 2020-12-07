@@ -2,6 +2,7 @@
 
 ## Development
 
+* feat: load source map file of `sourceMappingURL`;
 * fix: no-treeshake causing inclusion of dead CSS and "phantom" js modules (#7);
 
 ## 1.2.9 (30/11/2020)
