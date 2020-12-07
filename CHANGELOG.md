@@ -1,8 +1,9 @@
 # rollup-plugin-css-chunks changelog
 
-## Development
+## 2.0.0 (07/12/2020)
 
 * feat: load source map file of `sourceMappingURL`;
+* feat: return CSS chunk public URL;
 * fix: no-treeshake causing inclusion of dead CSS and "phantom" js modules (#7);
 
 ## 1.2.9 (30/11/2020)

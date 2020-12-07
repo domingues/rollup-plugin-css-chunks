@@ -1,6 +1,6 @@
 {
   "name": "rollup-plugin-css-chunks",
-  "version": "2.0.0-alpha.2",
+  "version": "2.0.0",
   "description": "Rollup plugin to extract CSS into chunks",
   "main": "index.js",
   "files": [
@@ -31,11 +31,13 @@
   },
   "devDependencies": {
     "@types/node": "^14.10.3",
+    "@types/url-join": "^4.0.0",
     "@typescript-eslint/eslint-plugin": "^4.1.1",
     "@typescript-eslint/parser": "^4.1.1",
     "eslint": "^7.9.0",
     "rollup": "^2.27.0",
-    "typescript": "^4.0.2"
+    "typescript": "^4.0.2",
+    "url-join": "^4.0.1"
   },
   "peerDependencies": {
     "rollup": ">=1.19.0 <2.0.0 || >=2.21.0"
