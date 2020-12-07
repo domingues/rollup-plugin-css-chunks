@@ -87,7 +87,7 @@ const cssChunks: PluginImpl<InputPluginOptions> = function (options = {}) {
                 data.css[id] = code;
             }
 
-            return {code: '', moduleSideEffects: 'no-treeshake'};
+            return {code: '', meta: {transformedByCSSChunks: true}};
         },
 
         generateBundle(this: PluginContext, generateBundleOpts: NormalizedOutputOptions, bundle: OutputBundle) {
@@ -112,10 +112,18 @@ const cssChunks: PluginImpl<InputPluginOptions> = function (options = {}) {
                     }
                 }
 
+                const css_modules = []
+                for (const f of Object.keys(chunk.modules)) {
+                    const ids = this.getModuleInfo(f)?.importedIds?.filter(
+                        v => this.getModuleInfo(v)?.meta.transformedByCSSChunks == true)
+                    if (ids)
+                        css_modules.push(...ids)
+                }
+
                 const sources = [];
                 const sourcesContent = [];
                 const mappings = [];
-                for (const f of Object.keys(chunk.modules).filter(filter)) {
+                for (const f of css_modules) {
                     if (data.map[f]) {
                         const i = sources.length;
                         sources.push(path.relative(generateBundleOpts.dir, data.map[f].sources[0]));
