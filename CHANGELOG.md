@@ -1,5 +1,9 @@
 # rollup-plugin-css-chunks changelog
 
+## 2.0.2 (10/12/2020)
+
+* fix: peerDependencies specification (#17);
+
 ## 2.0.1 (07/12/2020)
 
 * fix: url-join missing from dependencies (#13);
