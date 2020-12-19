@@ -39,7 +39,7 @@ export default {
     },
     plugins: [
         css({
-            // inject `@import` directives
+            // inject a CSS `@import` directive for each chunk depended on
             injectImports: false,
             // name pattern for emitted secondary chunks
             chunkFileNames: '[name]-[hash].css',
