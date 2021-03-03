@@ -165,7 +165,7 @@ const cssChunks: PluginImpl<InputPluginOptions> = function (options = {}) {
                     chunk.isEntry ? pluginOptions.entryFileNames : pluginOptions.chunkFileNames);
 
                 const css_file_url = urljoin(pluginOptions.publicPath, css_file_name);
-                chunk.code = chunk.code.replace(new RegExp(`CSS_FILE_${chunk.fileName}`, 'g'), css_file_url);
+                chunk.code = chunk.code.replace(new RegExp(`CSS_FILE_${chunk.fileName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'g'), css_file_url);
 
                 if (emitFiles) {
                     if (emitFiles && pluginOptions.sourcemap) {

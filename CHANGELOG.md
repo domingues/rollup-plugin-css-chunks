@@ -1,5 +1,9 @@
 # rollup-plugin-css-chunks changelog
 
+## 2.0.3 (03/03/2021)
+
+* fix: invalid RegEx ([#21](https://github.com/domingues/rollup-plugin-css-chunks/pull/21));
+
 ## 2.0.2 (10/12/2020)
 
 * fix: peerDependencies specification (#17);
