@@ -2,7 +2,16 @@
   "name": "rollup-plugin-css-chunks",
   "version": "2.0.3",
   "description": "Rollup plugin to extract CSS into chunks",
-  "main": "index.js",
+  "type": "module",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/mjs/index.js",
+  "types": "./dist/mjs/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/cjs/index.js",
+      "import": "./dist/mjs/index.js"
+    }
+  },
   "files": [
     "index.js",
     "index.d.ts",
@@ -10,7 +19,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "rimraf dist/** && tsc -p tsconfig.cjs.json && tsc -p tsconfig.mjs.json",
     "lint": "eslint index.ts",
     "prepublishOnly": "npm run lint"
   },
@@ -26,18 +35,18 @@
   },
   "homepage": "https://github.com/domingues/rollup-plugin-css-chunks",
   "dependencies": {
-    "rollup-pluginutils": "^2.7.1",
-    "sourcemap-codec": "^1.4.4",
-    "url-join": "^4.0.1"
+    "rollup-pluginutils": "^2.8.2",
+    "sourcemap-codec": "^1.4.8"
   },
   "devDependencies": {
-    "@types/node": "^14.10.3",
-    "@types/url-join": "^4.0.0",
-    "@typescript-eslint/eslint-plugin": "^4.1.1",
-    "@typescript-eslint/parser": "^4.1.1",
-    "eslint": "^7.9.0",
-    "rollup": "^2.29.0",
-    "typescript": "^4.0.2"
+    "@types/node": "^14.17.5",
+    "@types/url-join": "^4.0.1",
+    "@typescript-eslint/eslint-plugin": "^4.28.4",
+    "@typescript-eslint/parser": "^4.28.4",
+    "eslint": "^7.31.0",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.53.3",
+    "typescript": "^4.3.5"
   },
   "peerDependencies": {
     "rollup": ">=2.29.0"
