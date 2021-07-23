@@ -11,8 +11,7 @@ import {
 } from 'rollup';
 import {createFilter} from 'rollup-pluginutils';
 import {encode, decode} from 'sourcemap-codec';
-import {readFileSync} from "fs";
-import urljoin from 'url-join';
+import {readFileSync} from 'fs';
 
 function hash(content: string) {
     return crypto.createHmac('sha256', content)
@@ -164,7 +163,7 @@ const cssChunks: PluginImpl<InputPluginOptions> = function (options = {}) {
                 const css_file_name = makeFileName(chunk.name, hash(code),
                     chunk.isEntry ? pluginOptions.entryFileNames : pluginOptions.chunkFileNames);
 
-                const css_file_url = urljoin(pluginOptions.publicPath, css_file_name);
+                const css_file_url = path.join(pluginOptions.publicPath, css_file_name);
                 chunk.code = chunk.code.replace(new RegExp(`CSS_FILE_${chunk.fileName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'g'), css_file_url);
 
                 if (emitFiles) {
